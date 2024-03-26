@@ -70,7 +70,7 @@ class GenerationEngine:
             ego_expert = AutoPilot(self.args, device=args.device),
             adv_policy = adv_policy.to(self.args.device),
             motion_model=BicycleModel(1/self.args.sim_tickrate).to(self.args.device),
-        )
+        ) # 创建了一个代理模拟器（ProxySimulator）对象。这个模拟器将接收上述创建的对手策略、自主代理和其他必要参数，并用于执行仿真
 
         # COSTS
         self.rd_cost_fn_rasterized = RouteDeviationCostRasterized(self.args)
@@ -90,8 +90,8 @@ class GenerationEngine:
             self.simulator.adv_policy.throttle,
         ]
         scenario_optim = torch.optim.Adam(scenario_params, lr=self.args.learning_rate, betas=(self.args.beta1, self.args.beta2),)
-
-        route_loop_bar = trange(
+        # trange 会显示进度条的可迭代对象
+        route_loop_bar = trange( 
             self.route_indexer.total // self.args.batch_size
         )
 
@@ -544,6 +544,7 @@ if __name__ == '__main__':
         default="leaderboard/data/routes/subset_20perTown.xml",
         help="Path to the .xml file describing the routes to be driven."
     )
+    //routes_file_adv在哪用到？
     main_parser.add_argument(
         "--routes_file_adv",
         type=str,
